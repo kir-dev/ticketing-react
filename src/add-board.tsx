@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
-import { queryClient } from "./main.tsx";
+import { TbLoader, TbPlus } from "react-icons/tb";
+import { Button } from "./button.tsx";
 import { useAddBoard } from "./queries/use-add-board.ts";
+import { queryClient } from "./query-client.ts";
 
 interface AddBoardForm {
   title: string;
@@ -26,9 +28,9 @@ export function AddBoard() {
     <div>
       <form onSubmit={onSubmit}>
         <input className="border rounded-md p-2 mr-2" {...register("title")} />
-        <button type="submit" className="border rounded-md p-2">
-          Add
-        </button>
+        <Button variant="default">
+          {addBoard.isPending ? <TbLoader /> : <TbPlus />}
+        </Button>
       </form>
     </div>
   );

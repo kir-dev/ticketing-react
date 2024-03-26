@@ -1,6 +1,9 @@
 import axios from "axios";
 import { ReactElement, useState } from "react";
-import { queryClient } from "./main.tsx";
+import { TbDeviceFloppy, TbEdit, TbTrash } from "react-icons/tb";
+import { Button } from "./button.tsx";
+
+import { queryClient } from "./query-client.ts";
 import { Board } from "./types.ts";
 
 const url = "https://api.ticketing.kir-dev.hu/boards";
@@ -35,28 +38,28 @@ export function BoardItem(props: BoardItemProps): ReactElement {
   };
 
   return (
-    <div className="bg-white p-2 rounded-md mt-2">
-      <p>{props.board.id}</p>
-      {!isEditing ? (
-        <p>{props.board.title}</p>
-      ) : (
-        <input
-          value={inputValue}
-          className="border rounded-md p-2 mr-2"
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-      )}
-      <p>{new Date(props.board.createdAt).toLocaleString()}</p>
+    <div className="bg-white p-2 rounded-md mt-2 flex justify-between box-border">
+      <div className="flex-1 overflow-hidden">
+        {!isEditing ? (
+          <p className="font-bold truncate">{props.board.title}</p>
+        ) : (
+          <input
+            value={inputValue}
+            className="border rounded-md p-2 mr-2"
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        )}
+        <p className="text-slate-500">
+          {new Date(props.board.createdAt).toLocaleString()}
+        </p>
+      </div>
       <div className="flex gap-2">
-        <button
-          className="bg-green-200 p-2 rounded-md mr-2"
-          onClick={onClickButton}
-        >
-          {isEditing ? "Save" : "Edit"}
-        </button>
-        <button className="bg-red-500 p-2 rounded-md" onClick={onDelete}>
-          Delete
-        </button>
+        <Button variant="outline" onClick={onClickButton}>
+          {isEditing ? <TbDeviceFloppy /> : <TbEdit />}
+        </Button>
+        <Button variant="outline" onClick={onDelete}>
+          <TbTrash />
+        </Button>
       </div>
     </div>
   );

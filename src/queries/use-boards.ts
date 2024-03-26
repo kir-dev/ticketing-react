@@ -11,5 +11,9 @@ export function useBoards() {
       const response = await axios.get<Board[]>(url);
       return response.data;
     },
+    select: (boards) => {
+      const sorted = [...boards.sort((a, b) => b.id - a.id)];
+      return sorted.splice(0, 20);
+    },
   });
 }
