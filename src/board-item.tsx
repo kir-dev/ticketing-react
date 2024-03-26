@@ -1,17 +1,23 @@
 import axios from "axios";
 import { ReactElement, useState } from "react";
+import { queryClient } from "./main.tsx";
 import { Board } from "./types.ts";
 
 const url = "https://api.ticketing.kir-dev.hu/boards";
 
 interface BoardItemProps {
   board: Board;
-  onSave: () => void;
 }
 
 export function BoardItem(props: BoardItemProps): ReactElement {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState<string>(props.board.title);
+
+  const onRefresh = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["boards"],
+    });
+  };
 
   const onClickButton = () => {
     if (isEditing) {
@@ -19,15 +25,13 @@ export function BoardItem(props: BoardItemProps): ReactElement {
         .patch(url + "/" + props.board.id, {
           title: inputValue,
         })
-        .then(() => {
-          props.onSave();
-        });
+        .then(onRefresh);
     }
     setIsEditing((prevState) => !prevState);
   };
 
   const onDelete = () => {
-    axios.delete(url + "/" + props.board.id).then(props.onSave);
+    axios.delete(url + "/" + props.board.id).then(onRefresh);
   };
 
   return (
